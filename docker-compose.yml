@@ -12,6 +12,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: "8080"
+      ConnectionStrings__PostgreSql: "Host=postgres;Port=5432;Database=banking;Username=banking;Password=BankingLocal2026"
     restart: unless-stopped
 
   history-api:
@@ -46,3 +47,36 @@ services:
     environment:
       DOTNET_ENVIRONMENT: Development
     restart: unless-stopped
+
+  postgres:
+    image: postgres:17
+    container_name: banking-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: banking
+      POSTGRES_USER: banking
+      POSTGRES_PASSWORD: "BankingLocal2026"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infra/database/001_create_tables.sql:/docker-entrypoint-initdb.d/001_create_tables.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U banking -d banking"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: banking-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: "AdminLocal2026"
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
