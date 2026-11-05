@@ -1,0 +1,48 @@
+
+name: banking-transactions
+
+services:
+  barramento-api:
+    container_name: banking-barramento-api
+    build:
+      context: .
+      dockerfile: Banking.Transactions/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+    restart: unless-stopped
+
+  history-api:
+    container_name: banking-history-api
+    build:
+      context: .
+      dockerfile: Banking.History.Api/Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+    restart: unless-stopped
+
+  identity-api:
+    container_name: banking-identity-api
+    build:
+      context: .
+      dockerfile: Banking.Identity.Api/Dockerfile
+    ports:
+      - "8082:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+    restart: unless-stopped
+
+  transactions-worker:
+    container_name: banking-transactions-worker
+    build:
+      context: .
+      dockerfile: Banking.Transactions.Worker/Dockerfile
+    environment:
+      DOTNET_ENVIRONMENT: Development
+    restart: unless-stopped
