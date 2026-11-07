@@ -14,6 +14,8 @@ namespace Banking.History.Api.Validator
                 errors.Add("Account number is required.");
             }
 
+
+
             return errors;
         }
     }

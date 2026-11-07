@@ -1,4 +1,5 @@
-﻿using Banking.History.Api.Dto;
+﻿using Banking.History.Api.Application.Interface;
+using Banking.History.Api.Dto;
 using Banking.History.Api.Validator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -11,11 +12,16 @@ namespace Banking.History.Api.Controllers
     [Authorize]
     public class HistoryAccountController : ControllerBase
     {
-        [HttpGet]
-        public async Task<IActionResult> GetHistoryAccount([FromQuery]DtoAccount account)
+        private readonly IHistoryMovement _historyMovement;
+        public HistoryAccountController(IHistoryMovement historyMovement)
         {
+            _historyMovement = historyMovement;
+        }
 
-            var errors = AccountValidator.Validate(account);
+        [HttpGet]
+        public async Task<IActionResult> GetHistoryAccount([FromQuery] DtoAccount request, CancellationToken token)
+        {
+            var errors = AccountValidator.Validate(request);
 
             if (errors.Count > 0)
             {
@@ -26,13 +32,9 @@ namespace Banking.History.Api.Controllers
                 });
             }
 
-            //await _accountMovement.MoveAccount(dto, token);
+            var accountStatements = await _historyMovement.GetHistoryAsync(request, token);
 
-
-            return Ok(new
-            {
-                Message = "Operation validated successfully."
-            });
+            return Ok(accountStatements);
         }
     }
 }

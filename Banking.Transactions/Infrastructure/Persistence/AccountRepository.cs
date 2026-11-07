@@ -1,6 +1,7 @@
 ﻿using Banking.Barramento.Api.Domain;
 using Banking.Barramento.Api.Enums;
 using Banking.Barramento.Api.Infrastructure.Interface;
+using Banking.Barramento.Api.Infrastructure.Querys;
 using Dapper;
 using Npgsql;
 
@@ -15,22 +16,13 @@ namespace Banking.Barramento.Api.Infrastructure.Persistence
             _dataSource = dataSource;
         }
 
-        public async Task<bool> ExecuteMovementAccountTransactionAsync(AccountMovementDomain movement,
-                                                                        CancellationToken cancellationToken)
+        public async Task ExecuteMovementAccountTransactionAsync(AccountMovementDomain movement,CancellationToken cancellationToken)
         {
-
             await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-
             await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
 
             try
             {
-                const string updateBalanceSql = """
-                UPDATE accounts
-                SET balance = balance + @SignedAmount
-                WHERE account_number = @AccountNumber;
-                """;
-
                 var signedAmount = movement.OperationType switch
                 {
                     OperationType.Credit => movement.Value,
@@ -41,7 +33,7 @@ namespace Banking.Barramento.Api.Infrastructure.Persistence
 
                 var affectedRows = await connection.ExecuteAsync(
                     new CommandDefinition(
-                        updateBalanceSql,
+                        QueryPersistence.updateBalanceSql,
                         new
                         {
                             SignedAmount = signedAmount,
@@ -56,26 +48,9 @@ namespace Banking.Barramento.Api.Infrastructure.Persistence
                         "Account not found.");
                 }
 
-                const string insertTransactionSql = """
-                INSERT INTO transactions
-                    (
-                        transaction_id,
-                        account_number,
-                        operation_type,
-                        amount
-                    )
-                VALUES
-                    (
-                        @TransactionId,
-                        @AccountNumber,
-                        @OperationType,
-                        @Value
-                    );
-                """;
-
                 await connection.ExecuteAsync(
                     new CommandDefinition(
-                        insertTransactionSql,
+                        QueryPersistence.insertTransactionSql,
                         new
                         {
                             movement.TransactionId,
@@ -87,8 +62,6 @@ namespace Banking.Barramento.Api.Infrastructure.Persistence
                         cancellationToken: cancellationToken));
 
                 await transaction.CommitAsync(cancellationToken);
-
-                return true;
             }
             catch
             {

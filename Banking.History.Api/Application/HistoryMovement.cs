@@ -14,14 +14,9 @@ namespace Banking.History.Api.Application
             _historyRepository = historyRepository;
         }
 
-
         public async Task<AccountStatement?> GetHistoryAsync(DtoAccount account, CancellationToken cancellationToken = default)
         {
-
-            return await _historyRepository.GetStatementAsync(
-            accountNumber,
-            referenceDate,
-            cancellationToken);
+            return await _historyRepository.GetStatementAsync(account.Account,account.ReferenceDate,cancellationToken);
         }
     }
 }

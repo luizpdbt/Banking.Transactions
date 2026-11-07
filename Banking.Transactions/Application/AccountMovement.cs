@@ -12,7 +12,7 @@ namespace Banking.Barramento.Api.Application
             _accountRepository = accountRepository;
         }
 
-        public async Task<bool> MoveAccount(OperationDto operation, CancellationToken cancellation)
+        public async Task MoveAccount(OperationDto operation, CancellationToken cancellation)
         {
             var domainAccount = new Domain.AccountMovementDomain
             {
@@ -21,11 +21,7 @@ namespace Banking.Barramento.Api.Application
                 Value = operation.Value,
                 AccountNumber = operation.AccountNumber
             };
-
-
             await _accountRepository.ExecuteMovementAccountTransactionAsync(domainAccount, cancellation);
-
-            return false;
         }
     }
 }

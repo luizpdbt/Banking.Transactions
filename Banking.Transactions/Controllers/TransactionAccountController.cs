@@ -16,8 +16,7 @@ namespace Banking.Barramento.Api.Controllers
         private readonly IAccountMovement _accountMovement;
 
         private readonly ILogger<TransactionAccountController> _logger;
-        public TransactionAccountController(IAccountMovement accountMovement,
-                                            ILogger<TransactionAccountController> logger)
+        public TransactionAccountController(IAccountMovement accountMovement,ILogger<TransactionAccountController> logger)
         {
             _accountMovement = accountMovement;
             _logger = logger;

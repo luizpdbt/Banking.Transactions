@@ -3,6 +3,6 @@
     public class DtoAccount
     {
         public string Account { get; set; } = string.Empty;
-        public DateTime referenceDate;
+        public DateTime ReferenceDate { get; set; }
     }
 }

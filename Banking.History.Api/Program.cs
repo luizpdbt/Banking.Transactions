@@ -1,6 +1,4 @@
-using Banking.History.Api.Infraestructure.Interface;
-using Banking.History.Api.Infraestructure.Persistence;
-using Npgsql;
+using Banking.History.Api.Extension;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,13 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddHealthChecks();
 
-var connectionString = builder.Configuration
-    .GetConnectionString("PostgreSql")
-    ?? throw new InvalidOperationException(
-        "PostgreSQL connection string not configured.");
-
-builder.Services.AddSingleton(NpgsqlDataSource.Create(connectionString));
-builder.Services.AddScoped<IHistoryRepository, HistoryRepository>();
+builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddApplication();
+builder.Services.AddPersistence(builder.Configuration);
 
 var app = builder.Build();
 
@@ -23,6 +17,8 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
+app.UseExceptionHandler();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

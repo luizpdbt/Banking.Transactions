@@ -4,7 +4,7 @@ namespace Banking.Barramento.Api.Infrastructure.Interface
 {
     public interface IAccountRepository
     {
-        Task<bool> ExecuteMovementAccountTransactionAsync(
+        Task ExecuteMovementAccountTransactionAsync(
         AccountMovementDomain movement,
         CancellationToken cancellationToken);
     }
