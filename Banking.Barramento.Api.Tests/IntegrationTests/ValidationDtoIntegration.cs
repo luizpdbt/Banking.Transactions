@@ -12,7 +12,7 @@ using System.Text.Encodings.Web;
 
 namespace Banking.Barramento.Api.Tests.IntegrationTests
 {
-    public class ValidationDtoIngration
+    public class ValidationDtoIntegration
     {
         [Theory]
         [InlineData("00000000-0000-0000-0000-000000000000","123456", 100, 1)]
