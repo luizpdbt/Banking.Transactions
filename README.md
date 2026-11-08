@@ -36,6 +36,9 @@ docker compose logs --tail=100
 
 Abra **http://localhost:5050** (se essa for a porta publicada no Compose). Entre com o e-mail e a senha definidos nas variáveis de ambiente do serviço `pgadmin` no `docker-compose.yml`.
 
+<img width="500" height="300" alt="image" src="https://github.com/user-attachments/assets/032448c5-1065-4647-a5f3-f3f7e4886202" />
+
+
 No painel esquerdo, selecione **Servers → Register → Server**.
 
 ### 3.1. Aba General
