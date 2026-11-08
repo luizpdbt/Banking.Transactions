@@ -71,7 +71,8 @@ No pgAdmin, abra **Servers → Banking Transactions → Databases → banking**,
 
 Abra o arquivo `infra/init.sql` do repositório, copie **todo o conteúdo** para o editor SQL e clique no botão **Execute Script (▶)** ou pressione `F5`.
 
-![Query Tool do pgAdmin com o script de inicialização](docs/images/pgadmin-query-tool.png)
+<img width="500" height="300" alt="image" src="https://github.com/user-attachments/assets/b4724c78-081b-498b-84a3-22e59543ae7a" />
+
 
 O script deve criar:
 
