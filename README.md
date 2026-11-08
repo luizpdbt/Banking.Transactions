@@ -44,6 +44,9 @@ No campo **Name**, digite `Banking Transactions`. Esse nome serve apenas para id
 
 ![Cadastro de servidor: aba General do pgAdmin](docs/images/pgadmin-general.png)
 
+<img width="792" height="625" alt="image" src="https://github.com/user-attachments/assets/103f8bf5-e4f5-4d0a-8bf1-9b4d4be73eb6" />
+
+
 ### 3.2. Aba Connection
 
 Preencha os campos com os valores da configuração local do PostgreSQL no Compose:
