@@ -6,7 +6,7 @@ namespace Banking.History.Api.Application.Interface
 {
     public interface IHistoryMovement
     {
-        Task<PagedResult<AccountStatement?>> GetHistoryAsync(
+        Task<PagedResult<AccountStatement>?> GetHistoryAsync(
         DtoAccount account,
         int page,
         int pageSize,

@@ -2,7 +2,7 @@
 using Banking.History.Api.Application.Interface;
 using Banking.History.Api.Domain;
 using Banking.History.Api.Dto;
-using Banking.History.Api.Infraestructure.Interface;
+using Banking.History.Api.Infrastructure.Interface;
 
 namespace Banking.History.Api.Application
 {
@@ -15,7 +15,7 @@ namespace Banking.History.Api.Application
             _historyRepository = historyRepository;
         }
 
-        public async Task<PagedResult<AccountStatement?>> GetHistoryAsync(DtoAccount account,
+        public async Task<PagedResult<AccountStatement>?> GetHistoryAsync(DtoAccount account,
                                                             int page,
                                                             int pagesize ,
                                                             CancellationToken cancellationToken = default)

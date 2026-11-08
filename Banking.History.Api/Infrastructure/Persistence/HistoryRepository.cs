@@ -1,12 +1,12 @@
 ﻿using Banking.History.Api.Application.Common;
 using Banking.History.Api.Domain;
-using Banking.History.Api.Infraestructure.Interface;
 using Banking.History.Api.Infraestructure.Querys;
+using Banking.History.Api.Infrastructure.Interface;
 using Dapper;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Npgsql;
 
-namespace Banking.History.Api.Infraestructure.Persistence
+namespace Banking.History.Api.Infrastructure.Persistence
 {
     public class HistoryRepository : IHistoryRepository
     {
@@ -17,7 +17,7 @@ namespace Banking.History.Api.Infraestructure.Persistence
             _dataSource = dataSource;
         }
 
-        public async Task<PagedResult<AccountStatement?>> GetStatementAsync(string accountNumber,
+        public async Task<PagedResult<AccountStatement>?> GetStatementAsync(string accountNumber,
                                                                             DateTime referenceDate, 
                                                                             int page,
                                                                             int pageSize, 

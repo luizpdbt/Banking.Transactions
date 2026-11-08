@@ -39,15 +39,6 @@ services:
       ASPNETCORE_HTTP_PORTS: "8080"
     restart: unless-stopped
 
-  transactions-worker:
-    container_name: banking-transactions-worker
-    build:
-      context: .
-      dockerfile: Banking.Transactions.Worker/Dockerfile
-    environment:
-      DOTNET_ENVIRONMENT: Development
-    restart: unless-stopped
-
   postgres:
     image: postgres:17
     command: ["postgres", "-c", "max_connections=500"]

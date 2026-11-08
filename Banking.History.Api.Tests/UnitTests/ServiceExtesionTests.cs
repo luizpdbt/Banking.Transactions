@@ -1,6 +1,6 @@
 ﻿using Banking.History.Api.Extension;
-using Banking.History.Api.Infraestructure.Interface;
-using Banking.History.Api.Infraestructure.Persistence;
+using Banking.History.Api.Infrastructure.Persistence;
+using Banking.History.Api.Infrastructure.Interface;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;

@@ -1,7 +1,7 @@
 ﻿using Banking.History.Api.Application;
 using Banking.History.Api.Application.Interface;
-using Banking.History.Api.Infraestructure.Interface;
-using Banking.History.Api.Infraestructure.Persistence;
+using Banking.History.Api.Infrastructure.Interface;
+using Banking.History.Api.Infrastructure.Persistence;
 using Npgsql;
 
 namespace Banking.History.Api.Extension

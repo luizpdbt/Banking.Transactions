@@ -10,6 +10,7 @@ builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddGlobalExceptionHandling();
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

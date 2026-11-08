@@ -30,8 +30,7 @@ namespace Banking.Barramento.Api.Extension
                     "JWT Secret must contain at least 32 bytes.");
             }
 
-            services
-                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
                     options.MapInboundClaims = false;
@@ -56,8 +55,6 @@ namespace Banking.Barramento.Api.Extension
                             ClockSkew = TimeSpan.Zero
                         };
                 });
-
-            services.AddAuthorization();
 
             return services;
         }
