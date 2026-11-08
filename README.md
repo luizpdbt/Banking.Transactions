@@ -3,6 +3,15 @@
 
 Sistema de movimentações financeiras em .NET, com serviços de autenticação JWT, movimentação de contas e consulta de histórico paginado. A persistência utiliza PostgreSQL e a execução local utiliza Docker Compose.
 
+
+#Desenho Arquitetura
+
+<img width="1752" height="897" alt="desenhoArquitetura" src="https://github.com/user-attachments/assets/88800d4c-164a-4cc7-b322-8e240c3e19e6" />
+
+
+
+
+
 ## 1. Pré-requisitos
 
 - Docker Desktop instalado e em execução, com Docker Compose.
