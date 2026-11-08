@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{59C9EEF3-B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "infra", "infra", "{47F3AB4B-CBA2-489D-913F-EB37400C122D}"
 	ProjectSection(SolutionItems) = preProject
-		001_create_tables.sql = 001_create_tables.sql
+		init.sql = init.sql
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Banking.History.Api", "Banking.History.Api\Banking.History.Api.csproj", "{D1C1F35B-DA74-4CAD-9DA4-C4F66AF3091F}"

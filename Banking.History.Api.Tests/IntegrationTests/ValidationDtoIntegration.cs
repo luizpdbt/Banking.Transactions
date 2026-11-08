@@ -1,4 +1,5 @@
-﻿using Banking.History.Api.Application.Interface;
+﻿using Banking.History.Api.Application.Common;
+using Banking.History.Api.Application.Interface;
 using Banking.History.Api.Domain;
 using Banking.History.Api.Dto;
 using Banking.History.Api.Validator;
@@ -13,8 +14,7 @@ using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Moq;
 using System;
 using System.Net;
-using System.Security.Claims;
-using System.Text.Encodings.Web;
+
 
 namespace Banking.History.Api.Tests.IntegrationTests
 {
@@ -59,43 +59,10 @@ namespace Banking.History.Api.Tests.IntegrationTests
             movementMock.Verify(
                 x => x.GetHistoryAsync(
                     It.IsAny<DtoAccount>(),
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
                     It.IsAny<CancellationToken>()),
                 Times.Never);
-        }
-
-        [Fact]
-        public async Task GetHistory_ValidAccountAndDate_ReturnsOK()
-        {
-            // Arrange
-            var movementMock = new Mock<IHistoryMovement>();
-
-            var accountStatement = new AccountStatement();
-
-            movementMock
-                .Setup(x => x.GetHistoryAsync(
-                    It.IsAny<DtoAccount>(),
-                    It.IsAny<CancellationToken>()))
-                .ReturnsAsync(accountStatement);
-
-            await using var factory = CreateFactory(movementMock);
-            using var client = factory.CreateClient();
-
-            // Act
-            using var response = await client.GetAsync(
-                CreateUrl("123456"));
-
-            // Assert
-            Assert.Equal(
-                HttpStatusCode.OK,
-                response.StatusCode);
-
-            movementMock.Verify(
-                x => x.GetHistoryAsync(
-                    It.Is<DtoAccount>(dto =>
-                        dto.Account == "123456" &&
-                        dto.ReferenceDate == ReferenceDate),
-                    It.IsAny<CancellationToken>()),
-                Times.Once);
         }
 
         [Fact]

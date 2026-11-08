@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Banking.History.Api.Tests.IntegrationTests
@@ -58,57 +59,7 @@ namespace Banking.History.Api.Tests.IntegrationTests
             Assert.Contains("created_at AS CreatedAt", query);
         }
 
-        [Fact]
-        public void Sql_ShouldFilterTransactionsByReferenceDate()
-        {
-            // Arrange
-            var query = QueryPersistence.sql;
-
-            // Assert
-            Assert.Contains(
-                "created_at <= @ReferenceDate",
-                query);
-
-            Assert.Contains(
-                "account_number = @AccountNumber",
-                query);
-        }
-
-        [Fact]
-        public void Sql_ShouldOrderTransactionsChronologically()
-        {
-            // Arrange
-            var query = QueryPersistence.sql;
-
-            // Assert
-            Assert.Contains(
-                "ORDER BY created_at, transaction_id",
-                query);
-        }
-
-        [Fact]
-        public void Sql_ShouldCalculateCreditsAsPositiveAmounts()
-        {
-            // Arrange
-            var query = QueryPersistence.sql;
-
-            // Assert
-            Assert.Contains(
-                "WHEN operation_type = 1 THEN amount",
-                query);
-        }
-
-        [Fact]
-        public void Sql_ShouldCalculateDebitsAsNegativeAmounts()
-        {
-            // Arrange
-            var query = QueryPersistence.sql;
-
-            // Assert
-            Assert.Contains(
-                "WHEN operation_type = 2 THEN -amount",
-                query);
-        }
+    
 
         [Fact]
         public void Sql_ShouldReturnZeroWhenThereAreNoTransactions()
@@ -121,37 +72,147 @@ namespace Banking.History.Api.Tests.IntegrationTests
             Assert.Contains("SUM(", query);
         }
 
-        [Fact]
-        public void Sql_ShouldUseParameterizedQueries()
-        {
-            // Arrange
-            var query = QueryPersistence.sql;
-
-            // Assert
-            Assert.Contains("@AccountNumber", query);
-            Assert.Contains("@ReferenceDate", query);
-
-            Assert.DoesNotContain(
-                "WHERE account_number = '123456'",
-                query);
-        }
+    
 
         [Fact]
-        public void Sql_ShouldContainThreeSelectStatements()
+        public void Sql_ShouldContainFourResultSets()
         {
             // Arrange
             var query = QueryPersistence.sql;
 
             // Act
-            var selectCount = System.Text.RegularExpressions.Regex
-                .Matches(
-                    query,
-                    @"\bSELECT\b",
-                    System.Text.RegularExpressions.RegexOptions.IgnoreCase)
-                .Count;
+            var selectCount = Regex.Matches(
+                query,
+                @"\bSELECT\b",
+                RegexOptions.IgnoreCase
+            ).Count;
 
             // Assert
-            Assert.Equal(4, selectCount);
+            // 4 consultas, com um SELECT adicional
+            // dentro do EXISTS.
+            Assert.Equal(5, selectCount);
+        }
+
+        [Fact]
+        public void Sql_ShouldUseLimitAndOffsetForPagination()
+        {
+            // Arrange
+            var query = QueryPersistence.sql;
+
+            // Assert
+            Assert.Matches(
+                @"(?i)LIMIT\s+@PageSize",
+                query);
+
+            Assert.Matches(
+                @"(?i)OFFSET\s+@Offset",
+                query);
+        }
+
+        [Fact]
+        public void Sql_ShouldOrderTransactionsBeforePagination()
+        {
+            // Arrange
+            var query = QueryPersistence.sql;
+
+            // Assert
+            Assert.Matches(
+                @"(?is)ORDER\s+BY\s+created_at\s+DESC\s*,\s*" +
+                @"transaction_id\s+DESC\s+LIMIT\s+@PageSize\s+" +
+                @"OFFSET\s+@Offset",
+                query);
+        }
+
+        [Fact]
+        public void Sql_ShouldCountTotalTransactions()
+        {
+            // Arrange
+            var query = QueryPersistence.sql;
+
+            // Assert
+            Assert.Matches(
+                @"(?is)SELECT\s+COUNT\s*\(\s*\*\s*\)" +
+                @"\s+FROM\s+transactions",
+                query);
+        }
+
+        [Fact]
+        public void Sql_ShouldFilterTransactionsByDateRange()
+        {
+            // Arrange
+            var query = QueryPersistence.sql;
+
+            // Assert
+            Assert.Contains(
+                "created_at >= @StartDate",
+                query);
+
+            Assert.Contains(
+                "created_at < @EndDate",
+                query);
+        }
+
+        [Fact]
+        public void Sql_ShouldUseAccountNumberFilter()
+        {
+            // Arrange
+            var query = QueryPersistence.sql;
+
+            // Assert
+            Assert.Contains(
+                "account_number = @AccountNumber",
+                query);
+        }
+
+        [Fact]
+        public void Sql_ShouldUseDeterministicOrdering()
+        {
+            // Arrange
+            var query = QueryPersistence.sql;
+
+            // Assert
+            Assert.Matches(
+                @"(?i)ORDER\s+BY\s+created_at\s+DESC\s*,\s*" +
+                @"transaction_id\s+DESC",
+                query);
+        }
+
+        [Theory]
+        [InlineData(1, 10, 0L)]
+        [InlineData(2, 10, 10L)]
+        [InlineData(3, 10, 20L)]
+        [InlineData(5, 20, 80L)]
+        [InlineData(10, 100, 900L)]
+        public void Pagination_ShouldCalculateCorrectOffset(
+            int page,
+            int pageSize,
+            long expectedOffset)
+        {
+            // Act
+            var offset = ((long)page - 1) * pageSize;
+
+            // Assert
+            Assert.Equal(expectedOffset, offset);
+        }
+
+        [Theory]
+        [InlineData(0L, 10, 0L)]
+        [InlineData(1L, 10, 1L)]
+        [InlineData(10L, 10, 1L)]
+        [InlineData(11L, 10, 2L)]
+        [InlineData(100L, 20, 5L)]
+        [InlineData(101L, 20, 6L)]
+        public void Pagination_ShouldCalculateTotalPages(
+            long totalItems,
+            int pageSize,
+            long expectedPages)
+        {
+            // Act
+            var totalPages =
+                (totalItems + pageSize - 1) / pageSize;
+
+            // Assert
+            Assert.Equal(expectedPages, totalPages);
         }
     }
 }

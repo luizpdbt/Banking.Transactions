@@ -1,4 +1,5 @@
-﻿using Banking.History.Api.Application.Interface;
+﻿using Banking.History.Api.Application.Common;
+using Banking.History.Api.Application.Interface;
 using Banking.History.Api.Domain;
 using Banking.History.Api.Dto;
 using Microsoft.AspNetCore.Authentication;
@@ -35,13 +36,23 @@ namespace Banking.History.Api.Tests.IntegrationTests
 
             var accountStatement = new AccountStatement();
 
+            var pagedResult = new PagedResult<AccountStatement>(
+                            Items: new[] { accountStatement },
+                            Page: 1,
+                            PageSize: 20,
+                            TotalItems: 1,
+                            TotalPages: 1
+                );
+
             movementMock
                 .Setup(x => x.GetHistoryAsync(
                     It.Is<DtoAccount>(dto =>
                         dto.Account == "123456" &&
                         dto.ReferenceDate == referenceDate),
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
                     It.IsAny<CancellationToken>()))
-                .ReturnsAsync(accountStatement);
+                .ReturnsAsync(pagedResult);
 
             await using var factory = CreateFactory(movementMock);
 
@@ -62,6 +73,8 @@ namespace Banking.History.Api.Tests.IntegrationTests
                     It.Is<DtoAccount>(dto =>
                         dto.Account == "123456" &&
                         dto.ReferenceDate == referenceDate),
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
                     It.IsAny<CancellationToken>()),
                 Times.Once);
         }

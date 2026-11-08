@@ -16,103 +16,108 @@ namespace Banking.Api.Perfomance.BarramentoPerfomance
         {
             private readonly ITestOutputHelper _output;
 
+            public static HttpClient client = new HttpClient
+            {
+                BaseAddress = new Uri("http://localhost:8080")
+            };
+
             public BarramentoPerformanceTests(ITestOutputHelper output)
             {
                 _output = output;
             }
 
-            //[Fact]
-            //[Trait("Category", "Performance")]
-            //public async Task Should_Maintain_Correct_Balance_With_Mixed_Concurrent_Operations()
-            //{
-            //    // Arrange
-            //    const string connectionString =
-            //        "Host=localhost;Port=5432;Database=banking;" +
-            //        "Username=banking;Password=BankingLocal2026;";
+            [Fact]
+            [Trait("Category", "Performance")]
+            public async Task Should_Maintain_Correct_Balance_With_Mixed_Concurrent_Operations()
+            {
+                // Arrange
+                const string connectionString =
+                    "Host=localhost;Port=5432;Database=banking;" +
+                    "Username=banking;Password=BankingLocal2026;";
 
-            //    await using var dataSource =
-            //        NpgsqlDataSource.Create(connectionString);
+                await using var dataSource =
+                    NpgsqlDataSource.Create(connectionString);
 
-            //    var accountNumber = await CreateTestAccountAsync(dataSource);
+                var accountNumber = await CreateTestAccountAsync(dataSource);
 
-            //    var token = await GetJwtTokenAsync();
+                var token = await GetJwtTokenAsync();
 
-            //    using var client = new HttpClient
-            //    {
-            //        BaseAddress = new Uri("http://localhost:8080")
-            //    };
+                using var client = new HttpClient
+                {
+                    BaseAddress = new Uri("http://localhost:8080")
+                };
 
-            //    client.DefaultRequestHeaders.Authorization =
-            //        new AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token);
 
-            //    // Debit = 1, Credit = 2
-            //    var operations = new[]
-            //    {
-            //        new { OperationType = 1, Value = 1.00m }, // -1
-            //        new { OperationType = 2, Value = 1.00m }, // +1
-            //        new { OperationType = 1, Value = 1.00m }, // -1
-            //        new { OperationType = 1, Value = 1.00m }  // -1
-            //    };
+                // Debit = 1, Credit = 2
+                var operations = new[]
+                {
+                    new { OperationType = 1, Value = 1.00m }, // -1
+                    new { OperationType = 2, Value = 1.00m }, // +1
+                    new { OperationType = 1, Value = 1.00m }, // -1
+                    new { OperationType = 1, Value = 1.00m }  // -1
+                };
 
-            //    var expectedBalance = operations.Sum(operation =>
-            //        operation.OperationType == 2
-            //            ? operation.Value
-            //            : -operation.Value);
+                var expectedBalance = operations.Sum(operation =>
+                    operation.OperationType == 2
+                        ? operation.Value
+                        : -operation.Value);
 
-            //    var timer = Stopwatch.StartNew();
+                var timer = Stopwatch.StartNew();
 
-            //    // Act: executa todas as operações concorrentemente.
-            //    var tasks = operations.Select(async operation =>
-            //    {
-            //        var request = new
-            //        {
-            //            TransactionId = Guid.NewGuid(),
-            //            AccountNumber = accountNumber,
-            //            operation.Value,
-            //            operation.OperationType
-            //        };
+                // Act: executa todas as operações concorrentemente.
+                var tasks = operations.Select(async operation =>
+                {
+                    var request = new
+                    {
+                        TransactionId = Guid.NewGuid(),
+                        AccountNumber = accountNumber,
+                        operation.Value,
+                        operation.OperationType
+                    };
 
-            //        using var response = await client.PostAsJsonAsync("/api/TransactionAccount",request);
+                    using var response = await client.PostAsJsonAsync("/api/TransactionAccount", request);
 
-            //        return response.StatusCode;
-            //    });
+                    return response.StatusCode;
+                });
 
-            //    var statuses = await Task.WhenAll(tasks);
+                var statuses = await Task.WhenAll(tasks);
 
-            //    timer.Stop();
+                timer.Stop();
 
-            //    // Consulta o resultado real no PostgreSQL.
-            //    await using var connection = await dataSource.OpenConnectionAsync();
+                // Consulta o resultado real no PostgreSQL.
+                await using var connection = await dataSource.OpenConnectionAsync();
 
-            //    var finalBalance = await connection.ExecuteScalarAsync<decimal>(
-            //        """
-            //            SELECT balance
-            //            FROM accounts
-            //            WHERE account_number = @AccountNumber;
-            //            """,
-            //        new { AccountNumber = accountNumber });
+                var finalBalance = await connection.ExecuteScalarAsync<decimal>(
+                    """
+                        SELECT balance
+                        FROM accounts
+                        WHERE account_number = @AccountNumber;
+                        """,
+                    new { AccountNumber = accountNumber });
 
-            //    var transactionCount = await connection.ExecuteScalarAsync<int>(
-            //        """
-            //            SELECT COUNT(*)
-            //            FROM transactions
-            //            WHERE account_number = @AccountNumber;
-            //            """,
-            //        new { AccountNumber = accountNumber });
+                var transactionCount = await connection.ExecuteScalarAsync<int>(
+                    """
+                        SELECT COUNT(*)
+                        FROM transactions
+                        WHERE account_number = @AccountNumber;
+                        """,
+                    new { AccountNumber = accountNumber });
 
-            //    // Assert
-            //    Assert.All(statuses, status =>
-            //        Assert.Equal(HttpStatusCode.OK, status));
+                // Assert
+                Assert.All(statuses, status =>
+                    Assert.Equal(HttpStatusCode.OK, status));
 
-            //    Assert.Equal(operations.Length, transactionCount);
-            //    Assert.Equal(expectedBalance, finalBalance);
+                Assert.Equal(operations.Length, transactionCount);
+                Assert.Equal(expectedBalance, finalBalance);
 
-            //    _output.WriteLine($"Account: {accountNumber}");
-            //    _output.WriteLine($"Operations: {operations.Length}");
-            //    _output.WriteLine($"Expected balance: {expectedBalance}");
-            //    _output.WriteLine($"Final balance: {finalBalance}");
-            //    _output.WriteLine($"Elapsed: {timer.Elapsed.TotalMilliseconds:F2} ms");
-            //}
+                _output.WriteLine($"Account: {accountNumber}");
+                _output.WriteLine($"Operations: {operations.Length}");
+                _output.WriteLine($"Expected balance: {expectedBalance}");
+                _output.WriteLine($"Final balance: {finalBalance}");
+                _output.WriteLine($"Elapsed: {timer.Elapsed.TotalMilliseconds:F2} ms");
+            }
 
             [Fact]
             [Trait("Category", "Performance")]
@@ -128,9 +133,9 @@ namespace Banking.Api.Perfomance.BarramentoPerfomance
                 "Maximum Pool Size=100;";
 
                 // Arrange
-                const int totalRequests = 100;
+                const int totalRequests = 19000;
                 const decimal creditValue = 1.00m;
-
+                
                 var token = await GetJwtTokenAsync();
 
                 await using var dataSource = NpgsqlDataSource.Create(connectionString);
@@ -139,10 +144,10 @@ namespace Banking.Api.Perfomance.BarramentoPerfomance
                 var accountNumber =
                     await CreateTestAccountAsync(dataSource);
 
-                using var client = new HttpClient
-                {
-                    BaseAddress = new Uri("http://localhost:8080")
-                };
+                //using var client = new HttpClient
+                //{
+                //    BaseAddress = new Uri("http://localhost:8080")
+                //};
 
                 client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
