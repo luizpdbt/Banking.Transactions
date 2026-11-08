@@ -42,9 +42,8 @@ No painel esquerdo, selecione **Servers → Register → Server**.
 
 No campo **Name**, digite `Banking Transactions`. Esse nome serve apenas para identificar a conexão no pgAdmin.
 
-![Cadastro de servidor: aba General do pgAdmin](docs/images/pgadmin-general.png)
 
-<img width="792" height="625" alt="image" src="https://github.com/user-attachments/assets/103f8bf5-e4f5-4d0a-8bf1-9b4d4be73eb6" />
+<img width="500" height="300" alt="image" src="https://github.com/user-attachments/assets/103f8bf5-e4f5-4d0a-8bf1-9b4d4be73eb6" />
 
 
 ### 3.2. Aba Connection
