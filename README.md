@@ -6,7 +6,8 @@ Sistema de movimentações financeiras em .NET, com serviços de autenticação 
 
 #Desenho Arquitetura
 
-<img width="1752" height="897" alt="desenhoArquitetura" src="https://github.com/user-attachments/assets/88800d4c-164a-4cc7-b322-8e240c3e19e6" />
+<img width="1754" height="897" alt="Arquitetura AWS de Microserviços Bancários" src="https://github.com/user-attachments/assets/925de1f5-9a51-46e1-80e5-2b7b9bb29a04" />
+
 
 
 
