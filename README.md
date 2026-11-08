@@ -189,11 +189,3 @@ docker compose up -d
 ```
 
 **Cuidado:** `docker compose down -v` também remove volumes gerenciados pelo Compose, podendo apagar os dados do banco.
-
-## Solução de problemas
-
-**`Is a directory` ao executar `01-init.sql`:** remova ou corrija o bind mount de inicialização automática que aponta para um diretório em vez de um arquivo. Este README descreve o procedimento **manual** pelo Query Tool; não depende desse mount.
-
-**pgAdmin não conecta:** confira se os containers estão em execução, se o serviço PostgreSQL se chama `postgres` e se banco, usuário e senha correspondem ao Compose.
-
-**Tabelas não aparecem:** confirme que o script foi executado no banco `banking` e atualize a árvore do pgAdmin.
