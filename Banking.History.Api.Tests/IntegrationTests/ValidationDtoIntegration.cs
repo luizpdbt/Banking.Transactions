@@ -1,4 +1,5 @@
 ﻿using Banking.History.Api.Application.Interface;
+using Banking.History.Api.Domain;
 using Banking.History.Api.Dto;
 using Banking.History.Api.Validator;
 using Microsoft.AspNetCore.Authentication;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Moq;
+using System;
 using System.Net;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
@@ -38,9 +40,10 @@ namespace Banking.History.Api.Tests.IntegrationTests
             await using var factory = CreateFactory(movementMock);
             using var client = factory.CreateClient();
 
+            var accounUrl = CreateUrl(account);
+
             // Act
-            using var response = await client.GetAsync(
-                CreateUrl(account));
+            using var response = await client.GetAsync(accounUrl);
 
             // Assert
             Assert.Equal(
@@ -50,7 +53,7 @@ namespace Banking.History.Api.Tests.IntegrationTests
             var body = await response.Content.ReadAsStringAsync();
 
             Assert.Contains(
-                "Account number is required.",
+                "The Account field is required.",
                 body);
 
             movementMock.Verify(
@@ -61,15 +64,18 @@ namespace Banking.History.Api.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task GetHistory_ValidAccountAndDate_ReturnsOk()
+        public async Task GetHistory_ValidAccountAndDate_ReturnsOK()
         {
             // Arrange
             var movementMock = new Mock<IHistoryMovement>();
 
-            // Para tipos de retorno por referência, o Moq
-            // pode retornar null por padrão.
-            // Configure ReturnsAsync com um objeto real
-            // caso queira validar o conteúdo do histórico.
+            var accountStatement = new AccountStatement();
+
+            movementMock
+                .Setup(x => x.GetHistoryAsync(
+                    It.IsAny<DtoAccount>(),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(accountStatement);
 
             await using var factory = CreateFactory(movementMock);
             using var client = factory.CreateClient();
@@ -136,34 +142,5 @@ namespace Banking.History.Api.Tests.IntegrationTests
                     });
                 });
         }
-    }
-
-    public sealed class HistoryTestAuthenticationHandler(
-        IOptionsMonitor<AuthenticationSchemeOptions> options,
-        ILoggerFactory logger,
-        UrlEncoder encoder)
-        : AuthenticationHandler<AuthenticationSchemeOptions>(
-            options, logger, encoder)
-    {
-        protected override Task<AuthenticateResult>
-            HandleAuthenticateAsync()
-        {
-            var identity = new ClaimsIdentity(
-                [
-                    new Claim(
-                    ClaimTypes.Name,
-                    "integration-test")
-                ],
-                "Test");
-
-            var principal = new ClaimsPrincipal(identity);
-
-            return Task.FromResult(
-                AuthenticateResult.Success(
-                    new AuthenticationTicket(
-                        principal,
-                        "Test")));
-        }
-
     }
 }

@@ -22,7 +22,6 @@ namespace Banking.Barramento.Api.Tests.ArchitechTests
             "Controllers",
             "Domain",
             "Dto",
-            "Enums",
             "Extension",
             "Infrastructure",
             "Middleware",
@@ -39,7 +38,7 @@ namespace Banking.Barramento.Api.Tests.ArchitechTests
         private static string FindProjectPath()
         {
             var directory = new DirectoryInfo(AppContext.BaseDirectory);
-            var rootPath = directory.ToString().Replace(@"Banking.Barramento.Api.Tests\bin\Debug\net9.0\", "Banking.Transactions");
+            var rootPath = directory.ToString().Replace(@"Banking.History.Api.Tests\bin\Debug\net9.0\", "Banking.History.Api");
 
             return rootPath;
         }

@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Banking.History.Api.Extension;
+using Banking.History.Api.Infraestructure.Interface;
+using Banking.History.Api.Infraestructure.Persistence;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 
@@ -59,15 +62,15 @@ namespace Banking.Barramento.Api.Tests.UnitTests
             // Act
             var repository1 =
                 scope1.ServiceProvider
-                    .GetRequiredService<IAccountRepository>();
+                    .GetRequiredService<IHistoryRepository>();
 
             var repository2 =
                 scope1.ServiceProvider
-                    .GetRequiredService<IAccountRepository>();
+                    .GetRequiredService<IHistoryRepository>();
 
             var repository3 =
                 scope2.ServiceProvider
-                    .GetRequiredService<IAccountRepository>();
+                    .GetRequiredService<IHistoryRepository>();
 
             // Assert
 
@@ -126,7 +129,7 @@ namespace Banking.Barramento.Api.Tests.UnitTests
             services.AddPersistence(configuration);
 
             var descriptor = services.Single(
-                x => x.ServiceType == typeof(IAccountRepository));
+                x => x.ServiceType == typeof(IHistoryRepository));
 
             // Assert
             Assert.Equal(
@@ -134,7 +137,7 @@ namespace Banking.Barramento.Api.Tests.UnitTests
                 descriptor.Lifetime);
 
             Assert.Equal(
-                typeof(AccountRepository),
+                typeof(HistoryRepository),
                 descriptor.ImplementationType);
         }
     }

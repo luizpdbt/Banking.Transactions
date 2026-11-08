@@ -10,6 +10,7 @@ builder.Services.AddHealthChecks();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
+builder.Services.AddGlobalExceptionHandling();
 
 var app = builder.Build();
 
@@ -25,3 +26,5 @@ app.MapControllers();
 app.MapHealthChecks("/health");
 
 app.Run();
+
+public partial class Program { }

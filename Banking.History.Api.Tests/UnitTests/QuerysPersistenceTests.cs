@@ -151,7 +151,7 @@ namespace Banking.History.Api.Tests.IntegrationTests
                 .Count;
 
             // Assert
-            Assert.Equal(3, selectCount);
+            Assert.Equal(4, selectCount);
         }
     }
 }

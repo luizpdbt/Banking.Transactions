@@ -1,4 +1,5 @@
 ﻿using Banking.History.Api.Application.Interface;
+using Banking.History.Api.Domain;
 using Banking.History.Api.Dto;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -31,6 +32,16 @@ namespace Banking.History.Api.Tests.IntegrationTests
             var referenceDate = new DateTime(
                 2026, 11, 5, 17, 40, 0,
                 DateTimeKind.Utc);
+
+            var accountStatement = new AccountStatement();
+
+            movementMock
+                .Setup(x => x.GetHistoryAsync(
+                    It.Is<DtoAccount>(dto =>
+                        dto.Account == "123456" &&
+                        dto.ReferenceDate == referenceDate),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(accountStatement);
 
             await using var factory = CreateFactory(movementMock);
 
