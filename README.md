@@ -58,7 +58,8 @@ Preencha os campos com os valores da configuração local do PostgreSQL no Compo
 | Username | `banking` |
 | Password | `BankingLocal2026` |
 
-![Cadastro de servidor: aba Connection do pgAdmin](docs/images/pgadmin-connection.png)
+<img width="500" height="300" alt="image" src="https://github.com/user-attachments/assets/ff9583d3-c5f0-466a-b9d8-a8b498626710" />
+
 
 > **Atenção:** o print ilustra os campos, mas apresenta valores de exemplo como `admin` e `postgres`. **Substitua-os pelos valores da tabela acima**, ou pelos valores efetivamente definidos no seu `docker-compose.yml`. O hostname `postgres` funciona porque o pgAdmin se comunica com o banco pela rede interna do Docker; não é o endereço a ser usado necessariamente por clientes executados fora do Docker.
 
