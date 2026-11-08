@@ -1,3 +1,4 @@
+using Banking.Identity.Api.Extension;
 using Banking.Identity.Api.JwtService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddHealthChecks();
 
+builder.Services.AddGlobalExceptionHandling();
 builder.Services.AddSingleton<JwtTokenService>();
 
 var app = builder.Build();
