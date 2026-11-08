@@ -3,6 +3,15 @@
 
 Sistema de movimentações financeiras em .NET, com serviços de autenticação JWT, movimentação de contas e consulta de histórico paginado. A persistência utiliza PostgreSQL e a execução local utiliza Docker Compose.
 
+
+#Desenho Arquitetura
+
+<img width="1752" height="897" alt="desenhoArquitetura" src="https://github.com/user-attachments/assets/88800d4c-164a-4cc7-b322-8e240c3e19e6" />
+
+
+
+
+
 ## 1. Pré-requisitos
 
 - Docker Desktop instalado e em execução, com Docker Compose.
@@ -156,15 +165,23 @@ Os registros de decisão estão em `docs/`:
 
 As operações financeiras utilizam transações ACID e atualizações atômicas de saldo no PostgreSQL. Os testes de concorrência demonstram o comportamento nos cenários executados; não representam garantia de capacidade ilimitada.
 
-## 9. Testes automatizados
+## 9.Testes automatizados
 
-Com o SDK .NET instalado:
+Para executar os testes automatizados da solução:
 
-```bash
-dotnet test
+```powershell
+dotnet test Banking.Transactions.sln
 ```
 
-Testes de integração e desempenho podem exigir containers e APIs em execução.
+**Importante:** os testes de performance dependem dos serviços da aplicação e do PostgreSQL. Portanto, é necessário que os containers Docker estejam em execução antes de iniciar os testes.
+
+Para subir os containers:
+
+```powershell
+docker compose up -d --build
+```
+
+Após a inicialização dos serviços, execute os testes normalmente.
 
 ## 10. Encerrar o ambiente
 
@@ -181,11 +198,3 @@ docker compose up -d
 ```
 
 **Cuidado:** `docker compose down -v` também remove volumes gerenciados pelo Compose, podendo apagar os dados do banco.
-
-## Solução de problemas
-
-**`Is a directory` ao executar `01-init.sql`:** remova ou corrija o bind mount de inicialização automática que aponta para um diretório em vez de um arquivo. Este README descreve o procedimento **manual** pelo Query Tool; não depende desse mount.
-
-**pgAdmin não conecta:** confira se os containers estão em execução, se o serviço PostgreSQL se chama `postgres` e se banco, usuário e senha correspondem ao Compose.
-
-**Tabelas não aparecem:** confirme que o script foi executado no banco `banking` e atualize a árvore do pgAdmin.
