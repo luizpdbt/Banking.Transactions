@@ -145,6 +145,7 @@ Os registros de decisão estão em `docs/`:
 - ADR-001 — Separação dos serviços de movimentação financeira e consulta de saldos.
 - ADR-002 — Persistência de dados e consistência transacional.
 - ADR-003 — Controle de concorrência e atomicidade das movimentações financeiras.
+- ADR-004-Organizacao-Interna-dos-Servicos
 
 As operações financeiras utilizam transações ACID e atualizações atômicas de saldo no PostgreSQL. Os testes de concorrência demonstram o comportamento nos cenários executados; não representam garantia de capacidade ilimitada.
 
