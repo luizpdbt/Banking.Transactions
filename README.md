@@ -156,15 +156,23 @@ Os registros de decisão estão em `docs/`:
 
 As operações financeiras utilizam transações ACID e atualizações atômicas de saldo no PostgreSQL. Os testes de concorrência demonstram o comportamento nos cenários executados; não representam garantia de capacidade ilimitada.
 
-## 9. Testes automatizados
+## 9.Testes automatizados
 
-Com o SDK .NET instalado:
+Para executar os testes automatizados da solução:
 
-```bash
-dotnet test
+```powershell
+dotnet test Banking.Transactions.sln
 ```
 
-Testes de integração e desempenho podem exigir containers e APIs em execução.
+**Importante:** os testes de performance dependem dos serviços da aplicação e do PostgreSQL. Portanto, é necessário que os containers Docker estejam em execução antes de iniciar os testes.
+
+Para subir os containers:
+
+```powershell
+docker compose up -d --build
+```
+
+Após a inicialização dos serviços, execute os testes normalmente.
 
 ## 10. Encerrar o ambiente
 
