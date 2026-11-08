@@ -1,0 +1,14 @@
+# REFERENCIA: inserir os blocos resources no container de cada Deployment existente.
+# Este arquivo nao e um manifesto de Deployment completo nem deve ser aplicado diretamente.
+# barramento-api:
+#   resources:
+#     requests: {cpu: 250m, memory: 256Mi}
+#     limits: {cpu: 1000m, memory: 512Mi}
+# history-api:
+#   resources:
+#     requests: {cpu: 200m, memory: 256Mi}
+#     limits: {cpu: 750m, memory: 512Mi}
+# identity-api:
+#   resources:
+#     requests: {cpu: 100m, memory: 128Mi}
+#     limits: {cpu: 500m, memory: 256Mi}
