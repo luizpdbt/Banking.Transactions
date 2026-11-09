@@ -138,7 +138,19 @@ Authorization: Bearer <token>
 
 Essas credenciais são exclusivamente para testes locais.
 
-## 7. Histórico paginado
+## 7.1 GerandoTransacao 
+```http
+[GET http://localhost:5129/api/HistoryAccount?Account=12346&referenceDate=2026-11-08&page=1&pageSize=10](http://localhost:8080/api/TransactionAccount)
+```
+{
+  "transactionId": "8b1d6f90-1d5c-4b9e-8f9a-2d5e6c7b8a51",
+  "operationType": 2,
+  "value": 1900.00,
+  "accountNumber": "12346"
+}
+
+
+## 7.1 Consultando - Histórico paginado
 
 Exemplo de consulta, usando a porta local de desenvolvimento `5129`:
 
