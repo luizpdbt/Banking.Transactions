@@ -25,6 +25,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: "8080"
+      ConnectionStrings__PostgreSql: "Host=postgres;Port=5432;Database=banking;Username=banking;Password=BankingLocal2026"
     restart: unless-stopped
 
   identity-api:

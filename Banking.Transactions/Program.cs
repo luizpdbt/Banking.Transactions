@@ -1,5 +1,6 @@
 using Banking.Barramento.Api.Extension;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -9,6 +10,7 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddGlobalExceptionHandling();
+builder.Services.AddObservability(builder.Configuration);
 
 
 var app = builder.Build();

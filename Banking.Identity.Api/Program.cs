@@ -1,3 +1,4 @@
+using Banking.History.Api.Extension;
 using Banking.Identity.Api.Extension;
 using Banking.Identity.Api.JwtService;
 
@@ -10,6 +11,7 @@ builder.Services.AddHealthChecks();
 
 builder.Services.AddGlobalExceptionHandling();
 builder.Services.AddSingleton<JwtTokenService>();
+builder.Services.AddObservability(builder.Configuration);
 
 var app = builder.Build();
 

@@ -11,6 +11,7 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddGlobalExceptionHandling();
+builder.Services.AddObservability(builder.Configuration);
 
 var app = builder.Build();
 
