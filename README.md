@@ -289,6 +289,9 @@ Os serviços instrumentados podem ser identificados pelos respectivos nomes:
 - `Banking.History.Api`
 - `Banking.Identity.Api`, quando sua instrumentação estiver habilitada.
 
+<img width="872" height="419" alt="image" src="https://github.com/user-attachments/assets/1a150ede-a6e5-4272-abda-549e4512aac3" />
+
+
 A visualização permite analisar a duração das requisições, os códigos de resposta HTTP e os spans efetivamente instrumentados.
 
 ### 5. Consultar métricas
