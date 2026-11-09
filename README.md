@@ -201,3 +201,142 @@ docker compose up -d
 ```
 
 **Cuidado:** `docker compose down -v` também remove volumes gerenciados pelo Compose, podendo apagar os dados do banco.
+
+## 11. ## Observabilidade — OpenTelemetry, Prometheus, Tempo e Grafana
+
+O projeto possui uma infraestrutura de observabilidade baseada em OpenTelemetry, Prometheus, Grafana Tempo e Grafana.
+
+A infraestrutura é executada por meio de um Docker Compose independente, localizado no diretório `ObservabilidadeNova`, permitindo inicialização e manutenção separadas dos serviços bancários.
+
+### Pré-requisitos
+
+- Docker Desktop instalado e em execução.
+- Docker Compose V2.
+- Portas 3000, 9090, 3200, 4317, 4318 e 8889 disponíveis.
+
+### 1. Inicializar a infraestrutura de observabilidade
+
+Abra um terminal na raiz do repositório `Banking.Transactions` e execute:
+
+```powershell
+docker compose -f ObservabilidadeNova/docker-compose.yml up -d
+```
+
+O comando inicializará os seguintes serviços:
+
+| Serviço | Porta | Responsabilidade |
+|---|---|---|
+| Grafana | 3000 | Visualização de métricas e traces |
+| Prometheus | 9090 | Coleta e armazenamento de métricas |
+| Grafana Tempo | 3200 | Armazenamento e consulta de traces |
+| OpenTelemetry Collector | 4317 / 4318 | Recebimento de telemetria via OTLP |
+
+Para verificar o estado dos containers:
+
+```powershell
+docker compose -f ObservabilidadeNova/docker-compose.yml ps
+```
+
+### 2. Inicializar as APIs bancárias
+
+Após iniciar a observabilidade, execute os serviços bancários conforme as instruções de inicialização da aplicação apresentadas anteriormente neste README.
+
+As APIs instrumentadas exportam telemetria para o OpenTelemetry Collector.
+
+Para execução das APIs em containers Docker Desktop, o endpoint OTLP configurado é:
+
+```text
+http://host.docker.internal:4317
+```
+
+Para execução diretamente na máquina, utilizando Visual Studio, o endpoint é:
+
+```text
+http://localhost:4317
+```
+
+A configuração efetiva deverá corresponder ao ambiente de execução escolhido.
+
+### 3. Acessar o Grafana
+
+Com os containers iniciados, acesse:
+
+**URL:** http://localhost:3000
+
+**Usuário:** `admin`  
+**Senha inicial:** `local-demo-change-me`
+
+Essas credenciais são destinadas exclusivamente ao ambiente local de demonstração.
+
+Os data sources Prometheus e Tempo são provisionados automaticamente durante a inicialização do Grafana.
+
+### 4. Consultar traces das APIs
+
+Para visualizar os traces distribuídos:
+
+1. Acesse o Grafana.
+2. No menu lateral, selecione **Explore**.
+3. Selecione o data source **Tempo**.
+4. Escolha o tipo de consulta **Search**.
+5. No filtro **Service Name**, selecione a API desejada.
+6. Execute uma requisição HTTP na API.
+7. Clique em **Run query**.
+8. Selecione um Trace ID para visualizar os detalhes da requisição.
+
+Os serviços instrumentados podem ser identificados pelos respectivos nomes:
+
+- `Banking.Barramento.Api`
+- `Banking.History.Api`
+- `Banking.Identity.Api`, quando sua instrumentação estiver habilitada.
+
+A visualização permite analisar a duração das requisições, os códigos de resposta HTTP e os spans efetivamente instrumentados.
+
+### 5. Consultar métricas
+
+Para acessar o Prometheus:
+
+**URL:** http://localhost:9090
+
+No Grafana, selecione **Explore → Prometheus** para consultar as métricas coletadas pelo OpenTelemetry Collector.
+
+As métricas disponíveis dependem da instrumentação habilitada em cada aplicação.
+
+### 6. Verificar logs e solucionar problemas
+
+Para consultar os logs do Collector:
+
+```powershell
+docker compose -f ObservabilidadeNova/docker-compose.yml logs --tail 100 otel-collector
+```
+
+Para consultar os logs do Tempo:
+
+```powershell
+docker compose -f ObservabilidadeNova/docker-compose.yml logs --tail 100 tempo
+```
+
+Para consultar os logs do Grafana:
+
+```powershell
+docker compose -f ObservabilidadeNova/docker-compose.yml logs --tail 100 grafana
+```
+
+Caso os traces não apareçam, verifique se a API está executando, se o endpoint OTLP está correto e se o Collector está recebendo conexões.
+
+### 7. Encerrar a infraestrutura
+
+Para interromper os serviços de observabilidade:
+
+```powershell
+docker compose -f ObservabilidadeNova/docker-compose.yml down
+```
+
+Esse comando remove os containers e a rede criada pelo Compose, preservando os volumes de dados.
+
+### Considerações arquiteturais
+
+A observabilidade foi implementada de maneira desacoplada das regras de negócio, utilizando OpenTelemetry para instrumentação e exportação de telemetria.
+
+A escolha e seus trade-offs estão documentados no **ADR-007 — Estratégia de Observabilidade com Grafana e OpenTelemetry**.
+
+A implementação inicial prioriza a coleta de métricas e traces HTTP. Dashboards operacionais específicos, alertas e instrumentação detalhada das operações internas são possibilidades de evolução da solução.
