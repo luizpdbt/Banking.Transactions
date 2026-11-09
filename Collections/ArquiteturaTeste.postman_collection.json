@@ -1,0 +1,111 @@
+{
+  "info": {
+    "_postman_id": "03a1e9e5-3a9d-4762-8831-a6906b4c0144",
+    "name": "ArquiteturaTeste",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "7532427"
+  },
+  "item": [
+    {
+      "name": "HeathCheckBarramentoApi",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "HealthCheckHistoryApi",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "HealthCheckIdentityApi",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "TransactionAccount",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "IddentityProvider",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"username\": \"tester\",\r\n  \"password\": \"senha-local-de-teste\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5002/api/Auth",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5002",
+          "path": [
+            "api",
+            "Auth"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "HistoryAccount",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0ZXIiLCJqdGkiOiIwNDFmZWQ2MS1mYjQyLTQ4MWEtYWI5ZC01Mzg4NDJmZjk2M2EiLCJuYmYiOjE3OTM5MTUyNTQsImV4cCI6MTc5MzkxODg1NCwiaXNzIjoiQmFua2luZy5JZGVudGl0eS5BcGkiLCJhdWQiOiJCYW5raW5nLkFwaSJ9.os8pAkOU8XMq-oI-amD9OKrkb1vSMklyzdVmWVkYYlE",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5129/api/HistoryAccount?Account=123456&referenceDate=2026-11-05T17:40",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5129",
+          "path": [
+            "api",
+            "HistoryAccount"
+          ],
+          "query": [
+            {
+              "key": "Account",
+              "value": "123456"
+            },
+            {
+              "key": "referenceDate",
+              "value": "2026-11-05T17:40"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
