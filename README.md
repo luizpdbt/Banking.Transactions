@@ -136,7 +136,7 @@ Use o token retornado nas APIs protegidas:
 Authorization: Bearer <token>
 ```
 
-Essas credenciais são exclusivamente para testes locais. Confira o contrato de autenticação no código ou Swagger da API.
+Essas credenciais são exclusivamente para testes locais.
 
 ## 7. Histórico paginado
 
@@ -163,6 +163,8 @@ Os registros de decisão estão em `docs/`:
 - ADR-002 — Persistência de dados e consistência transacional.
 - ADR-003 — Controle de concorrência e atomicidade das movimentações financeiras.
 - ADR-004-Organizacao-Interna-dos-Servicos
+- ADR-005 — Escalabilidade horizontal e processamento de alto throughput
+- ADR-006-Seguranca-de-Dados-Sensiveis-e-Criptografia
 
 As operações financeiras utilizam transações ACID e atualizações atômicas de saldo no PostgreSQL. Os testes de concorrência demonstram o comportamento nos cenários executados; não representam garantia de capacidade ilimitada.
 
